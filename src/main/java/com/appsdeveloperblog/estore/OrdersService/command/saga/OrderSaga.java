@@ -9,6 +9,7 @@ import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.modelling.saga.EndSaga;
 import org.axonframework.modelling.saga.SagaEventHandler;
 import org.axonframework.modelling.saga.StartSaga;
 import org.axonframework.spring.stereotype.Saga;
@@ -45,5 +46,12 @@ public class OrderSaga {
     @SagaEventHandler(associationProperty = "orderId")
     public void handler(ProductReservedEvent productReservedEvent){
     //process user payment
+        log.info("ProductReservedEvent this is productId : "+productReservedEvent.getProductId()+" and orderId "+productReservedEvent.getOrderId());
+    }
+    @EndSaga
+    @SagaEventHandler(associationProperty = "orderId")
+    public void endHandler(OrderCreatedEvent productReservedEvent){
+        //process user payment
+        log.info("ProductReservedEvent this is productId : "+productReservedEvent.getProductId()+" and orderId "+productReservedEvent.getOrderId());
     }
 }
