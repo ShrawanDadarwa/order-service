@@ -31,7 +31,7 @@ public class OrdersCommandController {
     @PostMapping
     public String createOrder(@Valid @RequestBody OrderCreateRest order) {
         
-        String userId = "27b95829-4f3f-4ddf-8983-151ba010e35b";
+        String userId = "0b2e6931-dd73-47eb-852b-68c9230f33ee";
 
         CreateOrderCommand createOrderCommand = CreateOrderCommand.builder()
                 .addressId(order.getAddressId())

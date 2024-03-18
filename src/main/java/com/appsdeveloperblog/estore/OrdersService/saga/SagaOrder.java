@@ -2,7 +2,9 @@ package com.appsdeveloperblog.estore.OrdersService.saga;
 
 import com.appsdeveloperblog.estore.OrdersService.command.commands.ReserveProductCommand;
 import com.appsdeveloperblog.estore.OrdersService.core.events.OrderCreatedEvent;
+import com.core.events.ProductReservedEvent;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandCallback;
 import org.axonframework.commandhandling.CommandMessage;
 import org.axonframework.commandhandling.CommandResultMessage;
@@ -16,6 +18,7 @@ import javax.annotation.Nonnull;
 
 @Saga
 @RequiredArgsConstructor
+@Slf4j
 public class SagaOrder {
 
     private final transient CommandGateway commandGateway;
@@ -27,7 +30,8 @@ public class SagaOrder {
                 .orderId(orderCreatedEvent.getOrderId())
                 .quantity(orderCreatedEvent.getQuantity())
                 .userId(orderCreatedEvent.getUserId()).build();
-
+        log.info(" OrderCreatedEvent with productId : "+orderCreatedEvent.getProductId()
+                +" and orderId "+orderCreatedEvent.getOrderId());
         commandGateway.send(reserveProductCommand, new CommandCallback<ReserveProductCommand, Object>() {
 
             @Override
@@ -40,9 +44,10 @@ public class SagaOrder {
     }
 
 
-    @EndSaga
-    @SagaEventHandler(associationProperty = "orderId")
-    public void endHandler(){
 
+    @SagaEventHandler(associationProperty = "orderId")
+    public void handler(ProductReservedEvent productReservedEvent){
+    log.info(" ReserveProductCommand with productId : "+productReservedEvent.getProductId()
+            +" and orderId "+productReservedEvent.getOrderId());
     }
 }
