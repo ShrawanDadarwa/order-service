@@ -5,6 +5,7 @@
  */
 package com.appsdeveloperblog.estore.OrdersService.command.rest;
 
+import com.appsdeveloperblog.estore.OrdersService.Service.OrderService;
 import com.appsdeveloperblog.estore.OrdersService.core.model.OrderStatus;
 import com.appsdeveloperblog.estore.OrdersService.command.commands.CreateOrderCommand;
 import java.util.UUID;
@@ -12,16 +13,16 @@ import java.util.UUID;
 import jakarta.validation.Valid;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
 public class OrdersCommandController {
 
     private final CommandGateway commandGateway;
+    @Autowired
+    private  OrderService orderService;
 
     @Autowired
     public OrdersCommandController(CommandGateway commandGateway) {
@@ -43,6 +44,12 @@ public class OrdersCommandController {
                 .build();
 
         return commandGateway.sendAndWait(createOrderCommand);
+
+    }
+    @GetMapping("/{empId}")
+    ResponseEntity<?> getOrder(@PathVariable("empId") String empId){
+
+        return ResponseEntity.ok(orderService.getOrderDetails(empId));
 
     }
 
